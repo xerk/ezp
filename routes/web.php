@@ -1,5 +1,8 @@
 <?php
 
+use Gloudemans\Shoppingcart\Facades\Cart;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,15 +18,16 @@ Route::get('/', function () {
     return view('vendor.ezp.landing-page');
 })->name('landingPage');
 
-Route::get('/cart', function () {
-    return view('vendor.ezp.cart');
-})->name('cart');
+Route::get('checkout', 'CheckoutController@index')->name('checkout.index');
+Route::post('checkout', 'CheckoutController@store')->name('checkout.store');
 
-Route::get('/checkout', function () {
-    return view('vendor.ezp.checkout');
-})->name('checkout');
+Route::get('confirmation/{order}', 'ConfirmationController@index')->name('confirmation.index');
 
-Route::post('cart/{id}', 'CartController@store')->name('cart.store');
+Route::get('cart', 'CartController@index')->name('cart.index');
+Route::post('cart/{product}', 'CartController@store')->name('cart.store');
+Route::patch('/cart/{product}', 'CartController@update')->name('cart.update');
+Route::delete('/cart/{product}', 'CartController@destroy')->name('cart.destroy');
+
 Route::get('/shop', 'ProductController@index')->name('shop');
 
 Auth::routes();

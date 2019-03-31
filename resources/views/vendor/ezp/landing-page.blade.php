@@ -1,6 +1,5 @@
 @extends('vendor.ezp.layout')
 @section('title', __('Homepage'))
-@section('body-class', 'home')
 @section('content')
 @include('vendor.ezp.partials.slider')
 <!-- ***** New Arrivals Area Start ***** -->
@@ -19,7 +18,7 @@
                     @foreach (App\Company::all() as $item)
                     <!-- Singel Arrivals Slide Start -->
                     <div class="single_arrivals_slide">
-                        <a href="/home" class="product_image">
+                        <a href="{{ route('shop', [ 'company' => $item->id ]) }}" class="product_image">
                             <!-- Product Image -->
                             <img class="normal_img" src="{{ asset('storage/'. $item->image)}}" alt="">
                             <img class="hover_img" src="{{ asset('storage/'. $item->image)}}" alt="">
@@ -50,21 +49,23 @@
         </div>
 
         <div class="row">
-            @foreach (App\Product::with('company')->get() as $item)
+            @foreach (App\Product::where('featured', true)->take(8)->inRandomOrder()->get() as $item)
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="single_popular_item">
                         <div class="product_image">
                             <!-- Product Image -->
                             <img class="first_img" src="{{ asset('storage/'.$item->image) }}" alt="">
-                            <img class="hover_img" src="{{ asset('storage/'.$item->image) }}" alt="">
-                            <!-- Wishlist -->
-                            <div class="product_wishlist">
-                                <a href="wishlist.html" target="_blank"><i class="ti-heart"></i></a>
-                            </div>
+
                             <!-- Add to cart -->
                             <div class="product_add_to_cart">
-                                <a href="#"><i class="ti-shopping-cart" aria-hidden="true"></i> Add to Cart</a>
-                            </div>
+                                    <a href="{{ route('cart.store', $item) }}"
+                                    onclick="event.preventDefault();
+                                                  document.getElementById('cart-form-{{$item->id}}').submit();"><i class="ti-shopping-cart" aria-hidden="true"></i> Add to
+                                        Cart</a>
+                                </div>
+                                    <form id="cart-form-{{$item->id}}" action="{{ route('cart.store', $item) }}" method="POST" style="display: none;">
+                                            @csrf
+                                    </form>
                         </div>
                         <!-- Product Description -->
                         <div class="product_description">

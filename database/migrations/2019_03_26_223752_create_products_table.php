@@ -11,8 +11,10 @@ class CreateProductsTable extends Migration {
 			$table->increments('id');
 			$table->integer('company_id')->unsigned()->index();
 			$table->string('name');
+			$table->string('featured');
 			$table->integer('sku')->unique();
 			$table->integer('price');
+			$table->integer('discount_price');
 			$table->string('image');
 			$table->text('body');
 			$table->timestamps();

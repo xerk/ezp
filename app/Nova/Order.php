@@ -47,6 +47,8 @@ class Order extends Resource
         return [
             ID::make()->sortable(),
 
+            BelongsTo::make('User'),
+
             Text::make('Name', 'billing_name')
                 ->sortable()
                 ->rules('required', 'max:255'),

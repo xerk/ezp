@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Product;
+use App\Company;
 
 class ProductController extends Controller
 {
@@ -11,9 +13,18 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('vendor.ezp.shop');
+        if ($request->company != '') {
+            $product = Product::where('company_id', $request->company)->paginate(15);
+        } else {
+            $product = Product::paginate(15);
+        }
+        $company = Company::withCount('Products')->get();
+        return view('vendor.ezp.shop')->with([
+            'products' => $product,
+            'companies'   => $company
+        ]);
     }
 
     /**

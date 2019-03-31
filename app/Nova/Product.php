@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Vyuldashev\NovaMoneyField\Money;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\Boolean;
 
 class Product extends Resource
 {
@@ -36,7 +37,7 @@ class Product extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'name',
+        'name',
     ];
 
     /**
@@ -59,18 +60,22 @@ class Product extends Resource
             Number::make('SKU', 'sku')
                 ->sortable()
                 ->rules('required', 'max:10')
-                ->creationRules('unique:products')
-                ->updateRules('unique:products,{{resourceId}}'),
+                ->creationRules('unique:products,sku')
+                ->updateRules('unique:products,sku,{{resourceId}}'),
 
             Money::make('Price', 'EGP')
                 ->sortable()
-                ->rules('required', 'max:10')
-                ->creationRules('unique:products')
-                ->updateRules('unique:products,{{resourceId}}'),
+                ->rules('required', 'max:10'),
 
-            Image::make('Image'),
+            Money::make('Discount Price', 'EGP')
+                ->sortable()
+                ->rules('required', 'max:10'),
+
+            Image::make('Image')->rules('required'),
 
             Trix::make('Body'),
+
+            Boolean::make('Featured'),
 
             BelongsToMany::make('Orders'),
         ];
@@ -117,6 +122,8 @@ class Product extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new Actions\FeaturedProduct,
+        ];
     }
 }

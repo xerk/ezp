@@ -9,6 +9,7 @@ class CreateOrdersTable extends Migration {
 	{
 		Schema::create('orders', function(Blueprint $table) {
 			$table->increments('id');
+			$table->integer('user_id')->unsigned()->index();
 			$table->string('billing_email');
 			$table->string('billing_name');
 			$table->string('billing_address');
